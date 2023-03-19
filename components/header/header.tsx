@@ -42,10 +42,10 @@ const Header: FC = () => {
       {!session ? <Button onClick={handleSignin}>Signin</Button> : (
         <Flex as="nav" align="between" valign="center">
           <Link href="/account" passHref>
-            <a style={{ marginRight: '10px' }}>
+            {/* <a style={{ marginRight: '10px' }}>
               <UserIcon style={{ marginRight: '6px' }} />
               Account
-            </a>
+            </a> */}
           </Link>
           <a href="#" onClick={handleLogout}>
             Logout
