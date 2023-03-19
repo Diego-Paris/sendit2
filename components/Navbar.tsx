@@ -34,7 +34,7 @@ import { useRouter } from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FC, MouseEvent, MouseEventHandler, useCallback } from 'react';
 // import Logo from '../public/logo.svg';
-import UserIcon from '../icons/user.svg'
+import UserIcon from './icons/logo.svg'
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -91,7 +91,8 @@ export default function Navbar() {
               spacing={0}
             >
               {/* <Image src={Logo.src} alt="sendit logo" h="1.75rem" w="2rem" mr={1}/> */}
-              <UserIcon style={{ marginRight: '6px' }} />
+              {/* <UserIcon style={{ marginRight: '6px' }} /> */}
+              <UserIcon style={{ marginRight: '1', height: '1.75rem', width: '2rem' }} />
               <Text
                 textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
                 fontFamily={'heading'}

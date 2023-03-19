@@ -36,8 +36,10 @@ const options = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-
   adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: '/signin',
+  },
 };
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);

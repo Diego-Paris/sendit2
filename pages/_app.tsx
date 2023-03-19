@@ -1,21 +1,9 @@
 import { SessionProvider } from "next-auth/react";
-import { globalCss } from "stitches.config";
 import { ChakraProvider } from "@chakra-ui/react";
-import Navbar from "@/components/Navbar/Navbar";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-const globalStyles = globalCss({
-  "*": {
-    padding: 0,
-    margin: 0,
-    boxSizing: "border-box",
-  },
-  body: {
-    fontFamily: "system-ui",
-  },
-  a: {
-    color: "$secondary",
-  },
-});
+
 
 function App({ Component, pageProps }) {
   return (
@@ -23,6 +11,7 @@ function App({ Component, pageProps }) {
       <ChakraProvider>
         <Navbar />
         <Component {...pageProps} />
+        <Footer />
       </ChakraProvider>
     </SessionProvider>
   );

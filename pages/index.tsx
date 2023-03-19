@@ -1,14 +1,19 @@
-import { NextPage } from 'next'
-import Head from 'next/head'
-import Link from 'next/link'
-import Header from '@/components/header/header'
-import { Box, Layout } from '@/components/layout/layout'
-import { P } from '@/components/typography/typography'
+import { NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import HeroSection from "../components/HeroSection";
+import Features from "../components/Features";
+import Testimonials from "../components/Testimonials";
+import ListPosts from "../components/ListPosts";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
+      <ListPosts />
+      <HeroSection />
+      <Features />
+      <Testimonials />
+      {/* <Head>
         <title>Next Nest Boilerplate</title>
       </Head>
       <Header />
@@ -37,9 +42,9 @@ const Home: NextPage = () => {
           <br />
           <Link href="/api/app/hello">api/hello</Link>
         </P>
-      </Layout>
+      </Layout> */}
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
