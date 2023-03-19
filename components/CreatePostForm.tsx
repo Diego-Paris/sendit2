@@ -1,12 +1,12 @@
-import React from 'react';
-import { Box, Textarea, Text, Flex, Button } from '@chakra-ui/react';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
+import React from "react";
+import { Box, Textarea, Text, Flex, Button } from "@chakra-ui/react";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const CharacterCounter = ({ value, maxLength }) => {
   const remaining = maxLength - value.length;
-  const color = remaining < 0 ? 'red.500' : 'gray.500';
+  const color = remaining < 0 ? "red.500" : "gray.500";
   return (
     <Box mr={2} textAlign="left">
       <Text color={color} fontSize="sm">
@@ -18,15 +18,12 @@ const CharacterCounter = ({ value, maxLength }) => {
 
 const CreatePostForm = () => {
   const maxLength = 300;
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
-  async function fetchData() {
+  async function fetchData(content: string) {
     try {
-      console.log(session)
-      const response = await axios.get('');
-      const data = response.data
-      console.log(data);
-      console.log(session)
+      const paylo = { content };
+      const response = await axios.post("/api/posts", paylo);
     } catch (error) {
       console.error(error);
     }
@@ -35,35 +32,34 @@ const CreatePostForm = () => {
   const handleSubmit = (values, { resetForm }) => {
     // handle form submission logic here
     console.log(values);
-    fetchData()
+    fetchData(values.text);
     resetForm();
   };
 
   return (
-    
-        <Formik initialValues={{ text: '' }} onSubmit={handleSubmit}>
-          {({ values, handleChange }) => (
-            <Form>
-              <Textarea
-                name="text"
-                value={values.text}
-                onChange={handleChange}
-                placeholder="Enter up to 300 characters..."
-                maxLength={maxLength}
-                mb={2}
-                resize="none"
-                size="sm"
-                flex={1}
-              />
-              <Flex justifyContent="space-between" alignItems="center">
-                <CharacterCounter value={values.text} maxLength={maxLength} />
-                <Button type="submit" ml={2}>
-                  Submit
-                </Button>
-              </Flex>
-            </Form>
-          )}
-        </Formik>
+    <Formik initialValues={{ text: "" }} onSubmit={handleSubmit}>
+      {({ values, handleChange }) => (
+        <Form>
+          <Textarea
+            name="text"
+            value={values.text}
+            onChange={handleChange}
+            placeholder="Enter up to 300 characters..."
+            maxLength={maxLength}
+            mb={2}
+            resize="none"
+            size="sm"
+            flex={1}
+          />
+          <Flex justifyContent="space-between" alignItems="center">
+            <CharacterCounter value={values.text} maxLength={maxLength} />
+            <Button type="submit" ml={2}>
+              Submit
+            </Button>
+          </Flex>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

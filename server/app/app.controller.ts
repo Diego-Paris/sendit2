@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@/server/guards/auth.guard'
 
-@Controller('app')
+@Controller()
 export class AppController {
   @Get('/hello')
   helloWorld() {
