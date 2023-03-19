@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Textarea, Text, Flex, Button } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Textarea, Text, Flex, Button, useToast, Spinner } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -16,25 +16,56 @@ const CharacterCounter = ({ value, maxLength }) => {
   );
 };
 
-const CreatePostForm = () => {
+const CreatePostForm = ({ updatePosts }) => {
   const maxLength = 300;
+  const minLength = 2;
   const { data: session } = useSession();
+  const toast = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function fetchData(content: string) {
     try {
       const paylo = { content };
       const response = await axios.post("/api/posts", paylo);
+      updatePosts(response.data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const handleSubmit = (values, { resetForm }) => {
+  const handleSubmit = async (values, { resetForm }) => {
     // handle form submission logic here
+    setIsSubmitting(true);
     console.log(values);
-    fetchData(values.text);
+    if (values.text.length < minLength) {
+      toast({
+        title: `Your post must be at least ${minLength} characters long`,
+        status: "error",
+        isClosable: true,
+        position: "top",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+    await fetchData(values.text);
+    toast({
+      title: `Your post has been uploaded`,
+      status: "success",
+      isClosable: true,
+      position: "top",
+    });
     resetForm();
+    setIsSubmitting(false);
   };
+  function validateLength(value) {
+    let error;
+    if (value.length < minLength) {
+      error = `Your post must be at least ${minLength} characters long`;
+    } else if (value.toLowerCase() !== "naruto") {
+      error = "Jeez! You're not a fan 😱";
+    }
+    return error;
+  }
 
   return (
     <Formik initialValues={{ text: "" }} onSubmit={handleSubmit}>
@@ -50,12 +81,17 @@ const CreatePostForm = () => {
             resize="none"
             size="sm"
             flex={1}
+            isDisabled={!session}
+            minLength={3}
           />
           <Flex justifyContent="space-between" alignItems="center">
             <CharacterCounter value={values.text} maxLength={maxLength} />
-            <Button type="submit" ml={2}>
-              Submit
-            </Button>
+            {isSubmitting && <Spinner mt={4}/>}
+            {!isSubmitting && (
+              <Button type="submit" ml={2} isDisabled={!session}>
+                Submit
+              </Button>
+            )}
           </Flex>
         </Form>
       )}

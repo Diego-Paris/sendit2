@@ -9,6 +9,7 @@ import {
   HStack,
   SimpleGrid,
   Avatar,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import CreatePostForm from "./CreatePostForm";
@@ -16,49 +17,68 @@ import CardBox from "@/components/CardBox";
 
 const ListPosts = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       const response = await axios.get("/api/posts");
       console.log(response);
       setData(response.data);
+      setLoading(false);
     }
 
     fetchData();
   }, []);
 
+  const updatePosts = async (newPost) => {
+    const response = await axios.get("/api/posts");
+    setData(response.data);
+  };
+
   return (
     <Flex
       bg="gray.100"
       align="center"
-      h="100vh"
       py={{ base: 6 }}
       flexDirection="column"
       gap="6"
+      h="auto"
+      minH={`calc(94vh)`}
+      flexGrow={1}
     >
       <CardBox>
-        <CreatePostForm />
+        <CreatePostForm updatePosts={updatePosts} />
       </CardBox>
-      {data.map((item) => (
-        <CardBox key={item.id}>
-          <Flex justifyContent="space-between" alignItems="center">
-            <Avatar size={"sm"} src={item.user.image}/>
-            <Text color={"gray.400"}>
-              {new Date(item.createdAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </Text>
-          </Flex>
-          <Text mt={4}>{item.content}</Text>
-        </CardBox>
-      ))}
+      {loading ? (
+        <Spinner size="xl" />
+      ) : (
+        data.map((item) => (
+          <CardBox key={item.id}>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Avatar
+                size={"sm"}
+                src={item.user.image}
+                referrerPolicy="no-referrer"
+              />
+              <Text color={"gray.400"}>
+                {new Date(item.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </Text>
+            </Flex>
+            <Text mt={4}>{item.content}</Text>
+          </CardBox>
+        ))
+      )}
     </Flex>
   );
 };
 
 export default ListPosts;
+
 
 // import { Formik, Field } from 'formik';
 // import {

@@ -23,6 +23,7 @@ import {
   Image,
   LinkBox,
   LinkOverlay,
+  Spinner
 } from '@chakra-ui/react';
 import {
   HamburgerIcon,
@@ -32,14 +33,15 @@ import {
 } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { FC, MouseEvent, MouseEventHandler, useCallback } from 'react';
+import { FC, MouseEvent, MouseEventHandler, useCallback, useState } from 'react';
 // import Logo from '../public/logo.svg';
 import UserIcon from './icons/logo.svg'
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   const handleLogout = useCallback(
     async (event) => {
@@ -51,8 +53,13 @@ export default function Navbar() {
     [router]
   );
 
-  const handleSignin = useCallback(() => {
-    signIn();
+  const handleSignin = useCallback(async () => {
+    console.log("IS SIGNING IN")
+    setIsSigningIn(status === 'loading')
+    console.log(status === 'loading')
+    await signIn();
+    setIsSigningIn(false)
+    console.log(status === 'loading')
   }, []);
 
   return (
@@ -125,10 +132,9 @@ export default function Navbar() {
           >
             Sign In
           </Button> */}
-          {!session ? (
-            <Button onClick={handleSignin}>Sign in</Button>
-          ) : (
-            <Flex>
+          {(status === 'loading') && <Spinner />}
+          {(status === 'unauthenticated') && <Button onClick={handleSignin}>Sign in</Button>}
+          {(status === 'authenticated') && <Flex>
               {/* <a href="#" onClick={handleLogout}>
                 Logout
               </a> */}
@@ -150,8 +156,32 @@ export default function Navbar() {
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
+            </Flex>}
+          {/* {!session ? (
+            <Button onClick={handleSignin}>Sign in</Button>
+          ) : (
+            <Flex>
+              
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rounded={'full'}
+                  variant={'link'}
+                  cursor={'pointer'}
+                  minW={0}
+                >
+                  <Avatar size={'sm'} src={session.user.image} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem as="a" href="/profile">
+                    Profile
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </MenuList>
+              </Menu>
             </Flex>
-          )}
+          )} */}
         </Stack>
       </Flex>
 
@@ -359,6 +389,6 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: 'My Posts',
-    href: '#',
+    href: '/myposts',
   },
 ];

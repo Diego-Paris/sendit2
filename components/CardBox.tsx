@@ -8,7 +8,7 @@ const CustomBox = ({ children }) => {
       rounded="md"
       w={{ base: "80%", md: "70%" }}
       maxW={{ base: "100%", md: "600px" }}
-      minW={{ base: "80%", md: "70%" }}
+      minW={{ base: "80%", md: "600px" }}
       m={0}
     >
       {children}

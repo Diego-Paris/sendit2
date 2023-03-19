@@ -27,7 +27,9 @@ export class PostsService {
       take,
       cursor,
       where,
-      orderBy,
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         user: {
           select: {
