@@ -23,12 +23,12 @@ const ListPosts = () => {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("waiting for response")
+      console.log("waiting for response");
       if (session) {
         setLoading(true);
-        console.log("waiting for response")
+        console.log("waiting for response");
         const response = await axios.get("/api/posts?user=true");
-        console.log(response)
+        console.log(response);
         console.log(response);
         setData(response.data);
         setLoading(false);
@@ -79,6 +79,13 @@ const ListPosts = () => {
             <Text mt={4}>{item.content}</Text>
           </CardBox>
         ))
+      )}
+      {data.length === 0 && !loading && (
+        <Flex align="center" py={{ base: 6 }} flexDirection="column">
+          <Text color="gray">
+            Wow, much empty
+          </Text>
+        </Flex>
       )}
     </Flex>
   );
