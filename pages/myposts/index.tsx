@@ -10,7 +10,8 @@ export default function ProfilePage() {
 
   return (
     <>
-        {!session && (
+    <ListMyPosts />
+        {/* {!session && (
           <>
             <Box py={6}>
             <CardBox >
@@ -23,8 +24,8 @@ export default function ProfilePage() {
             </CardBox>
             </Box>
           </>
-        )}
-        {session && <ListMyPosts />}
+        )} */}
+        {/* {session && <ListMyPosts />} */}
     </>
   );
 }

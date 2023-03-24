@@ -41,6 +41,7 @@ export default function ProfileCard() {
             css={{
               border: '2px solid white',
             }}
+            referrerPolicy="no-referrer"
           />
         </Flex>
 
