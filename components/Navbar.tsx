@@ -40,6 +40,7 @@ import {
   useCallback,
   useState,
 } from "react";
+import NextLink from "next/link";
 // import Logo from '../public/logo.svg';
 import UserIcon from "./icons/logo.svg";
 
@@ -115,7 +116,7 @@ export default function Navbar() {
                 fontSize="lg"
                 fontWeight="bold"
               >
-                <LinkOverlay href="/">Send it.</LinkOverlay>
+                <LinkOverlay href="/" as={NextLink}>Send it.</LinkOverlay>
               </Text>
             </Stack>
           </LinkBox>
@@ -142,7 +143,7 @@ export default function Navbar() {
           </Button> */}
           {status === "loading" && <Spinner />}
           {status === "unauthenticated" && (
-            <Button onClick={handleSignin}>Sign in</Button>
+            <Button onClick={handleSignin} >Sign in</Button>
           )}
           {status === "authenticated" && (
             <Flex>
@@ -164,7 +165,7 @@ export default function Navbar() {
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem as="a" href="/profile">
+                  <MenuItem as={NextLink} href="/profile">
                     Profile
                   </MenuItem>
                   <MenuDivider />
@@ -229,6 +230,7 @@ const DesktopNav = () => {
                   textDecoration: "none",
                   color: linkHoverColor,
                 }}
+                as={NextLink}
               >
                 {navItem.label}
               </Link>
@@ -266,6 +268,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       p={2}
       rounded={"md"}
       _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      as={NextLink}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
@@ -315,7 +318,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
         py={2}
-        as={Link}
+        as={NextLink}
         href={href ?? "#"}
         justify={"space-between"}
         align={"center"}
@@ -351,7 +354,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Link key={child.label} py={2} href={child.href} as={NextLink}>
                 {child.label}
               </Link>
             ))}
