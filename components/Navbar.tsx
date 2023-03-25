@@ -67,7 +67,7 @@ export default function Navbar() {
     await signIn();
     setIsSigningIn(false);
     console.log(status === "loading");
-  }, []);
+  }, [status]);
 
   return (
     <Box>
