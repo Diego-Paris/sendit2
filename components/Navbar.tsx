@@ -24,7 +24,10 @@ import {
   LinkBox,
   LinkOverlay,
   Spinner,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
+import { FiBell, FiChevronDown } from "react-icons/fi";
 import {
   HamburgerIcon,
   CloseIcon,
@@ -116,7 +119,9 @@ export default function Navbar() {
                 fontSize="lg"
                 fontWeight="bold"
               >
-                <LinkOverlay href="/" as={NextLink}>Send it.</LinkOverlay>
+                <LinkOverlay href="/" as={NextLink}>
+                  Send it.
+                </LinkOverlay>
               </Text>
             </Stack>
           </LinkBox>
@@ -143,36 +148,84 @@ export default function Navbar() {
           </Button> */}
           {status === "loading" && <Spinner />}
           {status === "unauthenticated" && (
-            <Button onClick={handleSignin} >Sign in</Button>
+            <Button onClick={handleSignin}>Sign in</Button>
           )}
           {status === "authenticated" && (
-            <Flex>
-              {/* <a href="#" onClick={handleLogout}>
-                Logout
-              </a> */}
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <Avatar
-                    size={"sm"}
-                    src={session.user.image}
-                    referrerPolicy="no-referrer"
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem as={NextLink} href="/profile">
-                    Profile
-                  </MenuItem>
-                  <MenuDivider />
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </MenuList>
-              </Menu>
-            </Flex>
+            <>
+              {/* <Flex>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"link"}
+                    cursor={"pointer"}
+                    minW={0}
+                  >
+                    <Avatar
+                      size={"sm"}
+                      src={session.user.image}
+                      referrerPolicy="no-referrer"
+                    />
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem as={NextLink} href="/profile">
+                      Profile
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              </Flex> */}
+              <HStack spacing={{ base: "0", md: "6" }}>
+                <IconButton
+                  size="lg"
+                  variant="ghost"
+                  aria-label="open menu"
+                  icon={<FiBell />}
+                />
+                <Flex alignItems={"center"}>
+                  <Menu>
+                    <MenuButton
+                      py={2}
+                      transition="all 0.3s"
+                      _focus={{ boxShadow: "none" }}
+                    >
+                      <HStack>
+                        <Avatar
+                          size={"sm"}
+                          src={session.user.image}
+                          referrerPolicy="no-referrer"
+                        />
+                        <VStack
+                          display={{ base: "none", md: "flex" }}
+                          alignItems="flex-start"
+                          spacing="1px"
+                          ml="2"
+                          whiteSpace="nowrap"
+                        >
+                          <Text fontSize="sm">{session.user.name}</Text>
+                          {true && (
+                            <Text fontSize="xs" color="gray.600">
+                              Admin
+                            </Text>
+                          )}
+                        </VStack>
+                        <Box display={{ base: "none", md: "flex" }}>
+                          <FiChevronDown />
+                        </Box>
+                      </HStack>
+                    </MenuButton>
+                    <MenuList>
+                      <MenuItem as={NextLink} href="/profile">
+                        Profile
+                      </MenuItem>
+                      <MenuDivider />
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Flex>
+              </HStack>
+            </>
           )}
           {/* {!session ? (
             <Button onClick={handleSignin}>Sign in</Button>
