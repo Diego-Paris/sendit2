@@ -204,7 +204,7 @@ export default function Navbar() {
                           whiteSpace="nowrap"
                         >
                           <Text fontSize="sm">{session.user.name}</Text>
-                          {true && (
+                          {session.user.admin && (
                             <Text fontSize="xs" color="gray.600">
                               Admin
                             </Text>

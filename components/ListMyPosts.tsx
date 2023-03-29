@@ -33,6 +33,7 @@ const ListPosts = () => {
         console.log(response);
         console.log(response);
         setData(response.data);
+        console.log(session.user)
         // setLoading(false);
       }
       setLoading(false);
