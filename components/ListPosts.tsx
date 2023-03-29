@@ -44,7 +44,7 @@ const ListPosts = () => {
       flexDirection="column"
       gap="6"
       h="auto"
-      minH={`calc(94vh)`}
+      minH={`calc(100vh - 73px)`}
       flexGrow={1}
     >
       <CardBox>
