@@ -14,7 +14,8 @@ declare module 'next-auth' {
       name?: string
       email?: string
       image?: string
-      admin?: boolean // Add this line
+      admin?: boolean
+      username?: string
     }
   }
 }
