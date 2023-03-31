@@ -216,7 +216,7 @@ export default function Navbar() {
                       </HStack>
                     </MenuButton>
                     <MenuList>
-                      <MenuItem as={NextLink} href="/profile">
+                      <MenuItem as={NextLink} href={`/profile/${session.user.username}`}>
                         Profile
                       </MenuItem>
                       <MenuDivider />

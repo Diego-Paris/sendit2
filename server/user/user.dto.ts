@@ -5,6 +5,10 @@ export class UserDTO {
   @MinLength(1)
   name: string
 
-  @IsUrl()
-  image: string
+  // @IsUrl()
+  // image: string
+
+  username?: string
+
+  email?: string
 }
