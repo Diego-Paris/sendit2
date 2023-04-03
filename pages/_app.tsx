@@ -5,7 +5,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import  { useState } from 'react';
+import { useState } from "react";
+import NextNProgress from "nextjs-progressbar";
+import NProgress from "nprogress";
+
+import Head from "next/head";
 
 // import Router from 'next/router';
 // import NProgress from 'nprogress';
@@ -22,16 +26,20 @@ import  { useState } from 'react';
 //   NProgress.done();
 // });
 
-
+NProgress.configure({ showSpinner: false });
 
 function App({ Component, pageProps }) {
   const [queryClient] = useState(() => new QueryClient());
-  
+
   return (
     <>
       <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <ChakraProvider>
+            <Head>
+              <title>Send it.</title>
+            </Head>
+            <NextNProgress />
             <Navbar />
             <Component {...pageProps} />
             <ReactQueryDevtools />
