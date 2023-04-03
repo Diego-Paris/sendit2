@@ -8,6 +8,7 @@ import { GetStaticProps } from "next";
 import Loading from "@/components/Loading";
 import { useState, useEffect } from "react";
 import NotFoundPage from "@/components/NotFoundPage";
+import Head from "next/head";
 
 export default function ProfilePage({ username, session }) {
   const router = useRouter();
@@ -34,7 +35,6 @@ export default function ProfilePage({ username, session }) {
       }
     }
     fetchData();
-    
   }, [username]);
 
   const { data, isLoading, isError, error } = useQuery(
@@ -43,12 +43,12 @@ export default function ProfilePage({ username, session }) {
       const res = await fetch(`/api/user/${user.email}`);
       if (!res.ok) {
         const errorResponse = await res.json();
-        if (errorResponse.message === 'User not found') {
-          return { username }
+        if (errorResponse.message === "User not found") {
+          return { username };
         }
 
         // throw new Error(errorResponse.message);
-      }  
+      }
       return res.json();
     },
     {
@@ -59,12 +59,12 @@ export default function ProfilePage({ username, session }) {
       },
       onError: (err: Error) => err,
       retry: (failureCount, error) => {
-        console.log("HEYOOO",error.message)
-        if (error?.message === 'User not found') {
-          console.log("inside")
+        console.log("HEYOOO", error.message);
+        if (error?.message === "User not found") {
+          console.log("inside");
           return false;
         }
-        console.log("outside")
+        console.log("outside");
 
         return false;
       },
@@ -92,19 +92,22 @@ export default function ProfilePage({ username, session }) {
     // }
     // Handle other errors by displaying an error message
     // else {
-      return (
-        <>
-          <PageWrapper>
-            <p>An error occurred: {error.message}</p>
-          </PageWrapper>
-        </>
-      );
+    return (
+      <>
+        <PageWrapper>
+          <p>An error occurred: {error.message}</p>
+        </PageWrapper>
+      </>
+    );
     // }
   }
 
   return (
     <>
       <PageWrapper>
+        <Head>
+          <title>{`Send it. @${username}`}</title>
+        </Head>
         <ProfileCard user={data} session={session} />
       </PageWrapper>
     </>
