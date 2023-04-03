@@ -145,7 +145,7 @@ export default function ProfileCard({ user, session }) {
                     Edit Profile
                   </Button>
                   <SweetAlert2 {...swalProps}>
-                    <EditUserForm user={user} session={session} />
+                    <EditUserForm user={user} session={session} setSwalProps={setSwalProps} />
                   </SweetAlert2>
                 </>
               )}

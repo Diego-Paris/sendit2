@@ -12,17 +12,20 @@ import {
   AvatarBadge,
   IconButton,
   Center,
+  useToast,
+  FormHelperText,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
-const UserProfileEdit = ({ user, session }) => {
+const UserProfileEdit = ({ user, session, setSwalProps }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation(updateUserData);
   const router = useRouter();
+  const toast = useToast();
 
   const formik = useFormik({
     initialValues: {
@@ -51,7 +54,7 @@ const UserProfileEdit = ({ user, session }) => {
     return fetch(`/api/user/${user.email}`, {
       method: "PUT",
       body: JSON.stringify(updatedUser),
-      credentials: 'include',
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -63,7 +66,6 @@ const UserProfileEdit = ({ user, session }) => {
         return response.json();
       })
       .then((data) => {
-
         if (data && data.username !== user.username) {
           router.push(`/profile/${data.username}`);
         }
@@ -71,9 +73,22 @@ const UserProfileEdit = ({ user, session }) => {
         return data;
       })
       .then(() => {
+        toast({
+          title: `User profile has been updated`,
+          status: "success",
+          isClosable: true,
+          position: "top",
+        });
+        setSwalProps({ show: false });
         queryClient.invalidateQueries(["user", `${user.email}`]);
       })
       .catch((error) => {
+        toast({
+          title: `Could not updated user, please try again later`,
+          status: "success",
+          isClosable: true,
+          position: "top",
+        });
         console.error("Error:", error);
       });
   }
@@ -102,7 +117,7 @@ const UserProfileEdit = ({ user, session }) => {
           <FormLabel>User Icon</FormLabel>
           <Stack direction={["column", "row"]} spacing={6}>
             <Center>
-              <Avatar size="xl" src="https://bit.ly/sage-adebayo">
+              <Avatar size="xl" src={user?.image}>
                 <AvatarBadge
                   as={IconButton}
                   size="sm"
@@ -110,12 +125,15 @@ const UserProfileEdit = ({ user, session }) => {
                   top="-10px"
                   colorScheme="red"
                   aria-label="remove Image"
+                  isDisabled
                   icon={<SmallCloseIcon />}
                 />
               </Avatar>
             </Center>
             <Center w="full">
-              <Button w="full">Change Icon</Button>
+              <Button w="full" isDisabled>
+                Change Icon
+              </Button>
             </Center>
           </Stack>
         </FormControl>
@@ -142,7 +160,7 @@ const UserProfileEdit = ({ user, session }) => {
               onChange={formik.handleChange}
             />
           </FormControl>
-          <FormControl id="email" isRequired marginBottom={3}>
+          <FormControl id="email" marginBottom={10}>
             <FormLabel>Email Address</FormLabel>
             <Input
               name="email"
@@ -151,18 +169,32 @@ const UserProfileEdit = ({ user, session }) => {
               type="email"
               value={formik.values.email}
               onChange={formik.handleChange}
+              isDisabled
+              bg='gray.200'
             />
+            <FormHelperText color="gray.400">We&apos;ll never share your email with anyone else.</FormHelperText>
           </FormControl>
           <HStack justify="flex-end">
             <Button
               type="submit"
               colorScheme="teal"
               isLoading={mutation.isLoading}
+              w="full"
+              marginBottom={0}
             >
-              Save
+              Save changes
             </Button>
           </HStack>
         </form>
+        <Button
+          colorScheme="purple"
+          w="full"
+          onClick={() => {
+            setSwalProps({ show: false });
+          }}
+        >
+          Return to profile
+        </Button>
       </Stack>
     </Flex>
   );
