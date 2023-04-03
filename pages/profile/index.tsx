@@ -13,6 +13,8 @@ export default function ProfilePage() {
   useEffect(() => {
     if (session) {
       router.push(`/profile/${session.user.username}`);
+    } else {
+      router.push("/");
     }
   }, [session, router]);
 

@@ -93,7 +93,7 @@ export default function ProfileCard({ user, session }) {
               </Text>
             </Stack>
           </Stack>
-          {(user.email === session.user.email || session.user.admin) && (
+          {(user.email === session?.user.email || session?.user.admin) && (
             <>
               <Button
                 w={"full"}
