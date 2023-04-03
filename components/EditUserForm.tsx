@@ -14,9 +14,10 @@ import {
   Center,
   useToast,
   FormHelperText,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
@@ -26,6 +27,10 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
   const mutation = useMutation(updateUserData);
   const router = useRouter();
   const toast = useToast();
+  const [newUsername, setNewUsername] = useState(user.username);
+  const [usernameExists, setUsernameExists] = useState(true);
+  const [isValid, setIsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +53,33 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
     if (session) {
       console.log(session);
     }
-  }, [user, session]);
+    if (newUsername !== "") {
+      setIsLoading(true);
+      fetch(`/api/user/${newUsername}`)
+        .then((response) => {
+          if (response.status === 404) {
+            console.log("does not exists");
+            setUsernameExists(false);
+          } else {
+            setUsernameExists(true);
+            console.log("does exists");
+          }
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsLoading(false);
+        });
+    }
+  }, [user, session, newUsername]);
+
+  function handleChange(event) {
+    if (event.target.name === "username") {
+      console.log(event.target.value);
+      setNewUsername(event.target.value);
+      console.log(newUsername);
+    }
+  }
 
   function updateUserData(updatedUser) {
     return fetch(`/api/user/${user.email}`, {
@@ -84,8 +115,8 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
       })
       .catch((error) => {
         toast({
-          title: `Could not updated user, please try again later`,
-          status: "success",
+          title: `Could not update user, please try again later`,
+          status: "error",
           isClosable: true,
           position: "top",
         });
@@ -149,7 +180,12 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               onChange={formik.handleChange}
             />
           </FormControl>
-          <FormControl id="username" isRequired marginBottom={3}>
+          <FormControl
+            id="username"
+            isInvalid={usernameExists && formik.dirty}
+            isRequired
+            marginBottom={3}
+          >
             <FormLabel>Username</FormLabel>
             <Input
               name="username"
@@ -157,8 +193,25 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               _placeholder={{ color: "gray.500" }}
               type="text"
               value={formik.values.username}
-              onChange={formik.handleChange}
+              onChange={(event) => {
+                formik.handleChange(event);
+                handleChange(event);
+              }}
             />
+            {!isLoading && usernameExists &&  (
+              <FormErrorMessage>Username is taken</FormErrorMessage>
+            )}
+            {isLoading && (
+              <FormHelperText textAlign="left" color="grey.400">
+                Checking availability
+              </FormHelperText>
+            )}
+            {(!usernameExists || newUsername === user.username) &&
+              !isLoading && (
+                <FormHelperText textAlign="left" color="green.400">
+                  Username is available
+                </FormHelperText>
+              )}
           </FormControl>
           <FormControl id="email" marginBottom={10}>
             <FormLabel>Email Address</FormLabel>
@@ -170,9 +223,11 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               value={formik.values.email}
               onChange={formik.handleChange}
               isDisabled
-              bg='gray.200'
+              bg="gray.200"
             />
-            <FormHelperText color="gray.400">We&apos;ll never share your email with anyone else.</FormHelperText>
+            <FormHelperText color="gray.400">
+              We&apos;ll never share your email with anyone else.
+            </FormHelperText>
           </FormControl>
           <HStack justify="flex-end">
             <Button
@@ -181,6 +236,7 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               isLoading={mutation.isLoading}
               w="full"
               marginBottom={0}
+              isDisabled={!formik.dirty || !formik.isValid || usernameExists}
             >
               Save changes
             </Button>
