@@ -15,6 +15,7 @@ import CardBox from "./CardBox";
 import EditUserForm from "./EditUserForm";
 import React, { useState } from "react";
 import SweetAlert2 from "react-sweetalert2";
+import NextLink from "next/link";
 
 export default function ProfileCard({ user, session }) {
   const handleEditProfile = () => {};
@@ -25,7 +26,9 @@ export default function ProfileCard({ user, session }) {
       show: true,
       title: "Edit User Profile",
       showConfirmButton: false,
-      onResolve: ()=>{setSwalProps({show: false})},
+      onResolve: () => {
+        setSwalProps({ show: false });
+      },
     });
   }
 
@@ -70,53 +73,85 @@ export default function ProfileCard({ user, session }) {
           />
         </Flex>
 
-        <Box p={6}>
-          <Stack spacing={0} align={"center"} mb={5}>
-            <Heading fontSize={"2xl"} fontWeight={500} fontFamily={"body"}>
-              {user.name}
-            </Heading>
-            <Text color={"gray.500"}>{`@${user.username}`}</Text>
-            <Text color={"gray.500"}>{user.email}</Text>
-          </Stack>
+        {!user.email && (
+          <>
+            <Box p={6}>
+              <Stack spacing={0} align={"center"} mb={5}>
+                <Heading fontSize={"2xl"} fontWeight={500} fontFamily={"body"}>
+                  Profile not found
+                </Heading>
+                <Text color={"gray.500"}>{`@${user.username}`}</Text>
+                <Text color={"gray.500"}>{user.email}</Text>
+              </Stack>
 
-          <Stack direction={"row"} justify={"center"} spacing={6}>
-            <Stack spacing={0} align={"center"}>
-              <Text fontWeight={600}>23k</Text>
-              <Text fontSize={"sm"} color={"gray.500"}>
-                Followers
-              </Text>
-            </Stack>
-            <Stack spacing={0} align={"center"}>
-              <Text fontWeight={600}>23k</Text>
-              <Text fontSize={"sm"} color={"gray.500"}>
-                Followers
-              </Text>
-            </Stack>
-          </Stack>
-          {(user.email === session?.user.email || session?.user.admin) && (
-            <>
-              <Button
-                w={"full"}
-                mt={8}
-                bg={"gray.500"}
-                // bg={useColorModeValue("#151f21", "gray.900")}
-                color={"white"}
-                rounded={"md"}
-                _hover={{
-                  transform: "translateY(-2px)",
-                  boxShadow: "lg",
-                }}
-                variant="outline"
-                onClick={handleClick}
-              >
-                Edit Profile
-              </Button>
-              <SweetAlert2 {...swalProps}>
-                <EditUserForm user={user} session={session} />
-              </SweetAlert2>
-            </>
-          )}
-        </Box>
+              <Stack direction={"row"} justify={"center"} spacing={6}>
+                <Button
+                  colorScheme="teal"
+                  bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
+                  color="white"
+                  variant="solid"
+                  href="/"
+                  as={NextLink}
+                  mt={5}
+                >
+                  Go to Home
+                </Button>
+              </Stack>
+            </Box>
+          </>
+        )}
+
+        {user.email && (
+          <>
+            <Box p={6}>
+              <Stack spacing={0} align={"center"} mb={5}>
+                <Heading fontSize={"2xl"} fontWeight={500} fontFamily={"body"}>
+                  {user.name}
+                </Heading>
+                <Text color={"gray.500"}>{`@${user.username}`}</Text>
+                <Text color={"gray.500"}>{user.email}</Text>
+              </Stack>
+
+              <Stack direction={"row"} justify={"center"} spacing={6}>
+                <Stack spacing={0} align={"center"}>
+                  <Text fontWeight={600}>23k</Text>
+                  <Text fontSize={"sm"} color={"gray.500"}>
+                    Followers
+                  </Text>
+                </Stack>
+                <Stack spacing={0} align={"center"}>
+                  <Text fontWeight={600}>23k</Text>
+                  <Text fontSize={"sm"} color={"gray.500"}>
+                    Followers
+                  </Text>
+                </Stack>
+              </Stack>
+              {(user.email === session?.user.email || session?.user.admin) && (
+                <>
+                  <Button
+                    w={"full"}
+                    mt={8}
+                    bg={"gray.500"}
+                    // bg={useColorModeValue("#151f21", "gray.900")}
+                    color={"white"}
+                    rounded={"md"}
+                    _hover={{
+                      transform: "translateY(-2px)",
+                      boxShadow: "lg",
+                    }}
+                    variant="outline"
+                    onClick={handleClick}
+                  >
+                    Edit Profile
+                  </Button>
+                  <SweetAlert2 {...swalProps}>
+                    <EditUserForm user={user} session={session} />
+                  </SweetAlert2>
+                </>
+              )}
+            </Box>
+          </>
+        )}
       </Box>
     </Center>
   );

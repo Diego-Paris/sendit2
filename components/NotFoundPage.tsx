@@ -1,11 +1,11 @@
 import CardBox from "@/components/CardBox";
 import PageWrapper from "@/components/PageWrapper";
 import { Box, Heading, Text, Button } from "@chakra-ui/react";
-import NextLink from 'next/link'
+import NextLink from "next/link";
 
 export default function NotFoundPage() {
   return (
-    <PageWrapper styles={{align: 'center'}}>
+    <PageWrapper styles={{ align: "center" }}>
       <CardBox>
         <Box textAlign="center" py={10} px={6}>
           <Heading
@@ -29,7 +29,7 @@ export default function NotFoundPage() {
             bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
             color="white"
             variant="solid"
-            href='/'
+            href="/"
             as={NextLink}
           >
             Go to Home

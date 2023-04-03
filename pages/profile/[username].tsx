@@ -20,7 +20,7 @@ export default function ProfilePage({ username, session }) {
 
         if (!res.ok) {
           setUser({
-            email: "@@@",
+            email: username,
           });
           return;
         }
@@ -29,7 +29,7 @@ export default function ProfilePage({ username, session }) {
         setUser(userData);
       } catch (error) {
         setUser({
-          email: "@@@",
+          email: username,
         });
       }
     }
@@ -43,7 +43,11 @@ export default function ProfilePage({ username, session }) {
       const res = await fetch(`/api/user/${user.email}`);
       if (!res.ok) {
         const errorResponse = await res.json();
-        throw new Error(errorResponse.message);
+        if (errorResponse.message === 'User not found') {
+          return { username }
+        }
+
+        // throw new Error(errorResponse.message);
       }  
       return res.json();
     },
@@ -79,15 +83,15 @@ export default function ProfilePage({ username, session }) {
 
   if (isError) {
     // Handle the 404 error by redirecting to a custom 404 page
-    if (error.message === "User not found") {
-      router.push(`/profiIe/${username}`); // This is such a hack...
-      // setUser({
-      //   email: "",
-      // });
-      return <NotFoundPage />;
-    }
+    // if (error.message === "User not found") {
+    //   router.push(`/profiIe/${username}`); // This is such a hack...
+    //   // setUser({
+    //   //   email: "",
+    //   // });
+    //   return <NotFoundPage />;
+    // }
     // Handle other errors by displaying an error message
-    else {
+    // else {
       return (
         <>
           <PageWrapper>
@@ -95,7 +99,7 @@ export default function ProfilePage({ username, session }) {
           </PageWrapper>
         </>
       );
-    }
+    // }
   }
 
   return (
