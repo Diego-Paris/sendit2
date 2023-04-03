@@ -46,12 +46,28 @@ import {
 import NextLink from "next/link";
 // import Logo from '../public/logo.svg';
 import UserIcon from "./icons/logo.svg";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const {
+    data,
+    isLoading,
+    isSuccess: userLoaded,
+  } = useQuery(
+    ["user", session?.user?.email],
+    () => fetch(`/api/user/${session.user.email}`).then((res) => res.json()),
+    {
+      enabled: !!session?.user?.email,
+      refetchInterval: () => {
+        return 5000;
+      },
+      cacheTime: 0, //disabled caching to remove the ['user', null] from devtools
+    }
+  );
 
   const handleLogout = useCallback(
     async (event) => {
@@ -146,11 +162,12 @@ export default function Navbar() {
           >
             Sign In
           </Button> */}
-          {status === "loading" && <Spinner />}
+          {(status === "loading" ||
+            (!userLoaded && status === "authenticated")) && <Spinner />}
           {status === "unauthenticated" && (
             <Button onClick={handleSignin}>Sign in</Button>
           )}
-          {status === "authenticated" && (
+          {status === "authenticated" && userLoaded && (
             <>
               {/* <Flex>
                 <Menu>
@@ -193,7 +210,7 @@ export default function Navbar() {
                       <HStack>
                         <Avatar
                           size={"sm"}
-                          src={session.user.image}
+                          src={data.image}
                           referrerPolicy="no-referrer"
                         />
                         <VStack
@@ -203,8 +220,8 @@ export default function Navbar() {
                           ml="2"
                           whiteSpace="nowrap"
                         >
-                          <Text fontSize="sm">{session.user.name}</Text>
-                          {session.user.admin && (
+                          <Text fontSize="sm">{data.name}</Text>
+                          {data.admin && (
                             <Text fontSize="xs" color="gray.600">
                               Admin
                             </Text>
@@ -216,7 +233,10 @@ export default function Navbar() {
                       </HStack>
                     </MenuButton>
                     <MenuList>
-                      <MenuItem as={NextLink} href={`/profile/${session.user.username}`}>
+                      <MenuItem
+                        as={NextLink}
+                        href={`/profile/${data.username}`}
+                      >
                         Profile
                       </MenuItem>
                       <MenuDivider />
