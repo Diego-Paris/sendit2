@@ -206,7 +206,8 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                         Checking availability
                       </FormHelperText>
                     )}
-                    {(!usernameExists && newUsername !== user.username) &&
+                    {!usernameExists &&
+                      newUsername !== user.username &&
                       !isLoading && (
                         <FormHelperText textAlign="left" color="green.400">
                           Username is available
@@ -250,23 +251,38 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                   </FormControl>
                 )}
               </Field>
-              <Button
+              <HStack
                 mt={8}
-                colorScheme="teal"
-                isLoading={isSubmitting}
-                type="submit"
-                isDisabled={
-                  !dirty ||
-                  !isValid ||
-                  (usernameExists && newUsername !== user.username) ||
-                  isLoading ||
-                  (initialValues.name === values.name &&
-                    initialValues.username === values.username &&
-                    initialValues.email === values.email)
-                }
+                spacing={4}
+                direction="row"
+                wrap="wrap"
+                align="center"
+                justify="center"
               >
-                Submit
-              </Button>
+                <Button
+                  onClick={() => {
+                    setSwalProps({ show: false });
+                  }}
+                >
+                  Return to Profile
+                </Button>
+                <Button
+                  colorScheme="teal"
+                  isLoading={mutation.isLoading}
+                  type="submit"
+                  isDisabled={
+                    !dirty ||
+                    !isValid ||
+                    (usernameExists && newUsername !== user.username) ||
+                    isLoading ||
+                    (initialValues.name === values.name &&
+                      initialValues.username === values.username &&
+                      initialValues.email === values.email)
+                  }
+                >
+                  Submit
+                </Button>
+              </HStack>
               {Object.keys(errors).length > 0 && (
                 <div>
                   {Object.keys(errors).map((fieldName) => (
