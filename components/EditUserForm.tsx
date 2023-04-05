@@ -15,6 +15,7 @@ import {
   useToast,
   FormHelperText,
   FormErrorMessage,
+  Text,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
@@ -155,7 +156,7 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               <Field name="name">
                 {({ field, form }) => (
                   <FormControl
-                    isInvalid={!!(errors.name && touched.name)}
+                    // isInvalid={!!(errors.name)}
                     isRequired
                   >
                     <FormLabel htmlFor="name">Name</FormLabel>
@@ -164,7 +165,14 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                       id="name"
                       placeholder="Name"
                       value={values.name}
+                      // onChange={(e) => {
+                      //   form.setFieldValue("name", e.target.value);
+                      //   handleChange(e);
+                      // }}
                     />
+                    <FormHelperText textAlign="left" color="grey" mt={-0.2}>
+                      - Name must be between 2 and 50 characters
+                    </FormHelperText>
                   </FormControl>
                 )}
               </Field>
@@ -173,6 +181,7 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                   <FormControl
                     isInvalid={!!(errors.username && touched.username)}
                     isRequired
+                    mt={3}
                   >
                     <FormLabel htmlFor="username">Username</FormLabel>
                     <Input
@@ -197,12 +206,26 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                         Checking availability
                       </FormHelperText>
                     )}
-                    {(!usernameExists || newUsername === user.username) &&
+                    {(!usernameExists && newUsername !== user.username) &&
                       !isLoading && (
                         <FormHelperText textAlign="left" color="green.400">
                           Username is available
                         </FormHelperText>
                       )}
+                    {newUsername === user.username && !isLoading && (
+                      <FormHelperText textAlign="left" color="grey.500">
+                        Username is not changed
+                      </FormHelperText>
+                    )}
+                    <FormHelperText textAlign="left" color="grey" mt={-0.2}>
+                      - Must be between 7 and 20 characters
+                    </FormHelperText>
+                    <FormHelperText textAlign="left" color="grey" mt={-0.2}>
+                      - Cannot start with a number
+                    </FormHelperText>
+                    <FormHelperText textAlign="left" color="grey" mt={-0.2}>
+                      - Can only contain letters, numbers or _
+                    </FormHelperText>
                   </FormControl>
                 )}
               </Field>
@@ -210,7 +233,8 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={!!(errors.email && touched.email)}
-                    isRequired
+                    // isRequired
+                    mt={3}
                   >
                     <FormLabel htmlFor="email">Email</FormLabel>
                     <Input
@@ -218,19 +242,23 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                       id="email"
                       placeholder="Email"
                       value={values.email}
+                      isDisabled
                     />
+                    <FormHelperText color="gray.400">
+                      We&apos;ll never share your email with anyone else.
+                    </FormHelperText>
                   </FormControl>
                 )}
               </Field>
               <Button
-                mt={4}
+                mt={8}
                 colorScheme="teal"
                 isLoading={isSubmitting}
                 type="submit"
                 isDisabled={
                   !dirty ||
                   !isValid ||
-                  usernameExists ||
+                  (usernameExists && newUsername !== user.username) ||
                   isLoading ||
                   (initialValues.name === values.name &&
                     initialValues.username === values.username &&
@@ -242,7 +270,9 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               {Object.keys(errors).length > 0 && (
                 <div>
                   {Object.keys(errors).map((fieldName) => (
-                    <div key={fieldName}>{errors[fieldName]}</div>
+                    <Text mt={4} color={"red.400"} key={fieldName}>
+                      {errors[fieldName]}
+                    </Text>
                   ))}
                 </div>
               )}
