@@ -16,6 +16,7 @@ import {
   FormHelperText,
   FormErrorMessage,
   Text,
+  Textarea,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
@@ -35,6 +36,7 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
     name: user?.name || "",
     username: user?.username || "",
     email: user?.email || "",
+    bio: user?.bio || "",
   });
 
   useEffect(() => {
@@ -230,6 +232,29 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                   </FormControl>
                 )}
               </Field>
+              <Field name="bio">
+                {({ field, form }) => (
+                  <FormControl
+                    
+                  >
+                    <FormLabel htmlFor="bio">Bio</FormLabel>
+                    <Textarea
+                      {...field}
+                      id="bio"
+                      placeholder="Write about yourself..."
+                      value={values.bio}
+                      resize="none"
+                      onChange={(e) => {
+                        form.setFieldValue("bio", e.target.value);
+                        handleChange(e);
+                      }}
+                    />
+                    <FormHelperText textAlign="left" color="grey" mt={-0.2}>
+                      - Bio can be upto 50 characters long
+                    </FormHelperText>
+                  </FormControl>
+                )}
+              </Field>
               <Field name="email">
                 {({ field, form }) => (
                   <FormControl
@@ -277,7 +302,8 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
                     isLoading ||
                     (initialValues.name === values.name &&
                       initialValues.username === values.username &&
-                      initialValues.email === values.email)
+                      initialValues.email === values.email &&
+                      initialValues.bio === values.bio)
                   }
                 >
                   Submit

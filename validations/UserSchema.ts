@@ -24,7 +24,9 @@ const userSchema = Yup.object().shape({
 
   image: Yup.string().url(),
 
-  admin: Yup.boolean()
+  admin: Yup.boolean(),
+
+  bio: Yup.string().max(50, "Bio must be at most 50 characters"),
 });
 
 export default userSchema;

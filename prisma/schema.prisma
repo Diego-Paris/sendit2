@@ -18,6 +18,7 @@ model User {
   image         String?
   admin         Boolean   @default(false)
   username      String?    @unique
+  bio           String?
   accounts      Account[]
   sessions      Session[]
   posts         Post[]

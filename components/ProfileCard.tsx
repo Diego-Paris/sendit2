@@ -111,8 +111,16 @@ export default function ProfileCard({ user, session }) {
                 <Text color={"gray.500"}>{`@${user.username}`}</Text>
                 <Text color={"gray.500"}>{user.email}</Text>
               </Stack>
-
-              <Stack direction={"row"} justify={"center"} spacing={6}>
+              {user.bio ? (
+                <Text textAlign={"center"} color={"gray.700"} px={3}>
+                  {user.bio}
+                </Text>
+              ) : (
+                <Text textAlign={"center"} color={"gray.300"} px={3}>
+                  No bio, much empty...
+                </Text>
+              )}
+              {/* <Stack direction={"row"} justify={"center"} spacing={6}>
                 <Stack spacing={0} align={"center"}>
                   <Text fontWeight={600}>23k</Text>
                   <Text fontSize={"sm"} color={"gray.500"}>
@@ -125,7 +133,7 @@ export default function ProfileCard({ user, session }) {
                     Followers
                   </Text>
                 </Stack>
-              </Stack>
+              </Stack> */}
               {(user.email === session?.user.email || session?.user.admin) && (
                 <>
                   <Button
@@ -145,7 +153,11 @@ export default function ProfileCard({ user, session }) {
                     Edit Profile
                   </Button>
                   <SweetAlert2 {...swalProps}>
-                    <EditUserForm user={user} session={session} setSwalProps={setSwalProps} />
+                    <EditUserForm
+                      user={user}
+                      session={session}
+                      setSwalProps={setSwalProps}
+                    />
                   </SweetAlert2>
                 </>
               )}
