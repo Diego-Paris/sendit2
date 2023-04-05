@@ -235,7 +235,7 @@ const UserProfileEdit = ({ user, session, setSwalProps }) => {
               <Field name="bio">
                 {({ field, form }) => (
                   <FormControl
-                    
+                  mt={3}
                   >
                     <FormLabel htmlFor="bio">Bio</FormLabel>
                     <Textarea
