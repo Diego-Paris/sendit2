@@ -239,6 +239,12 @@ export default function Navbar() {
                       >
                         Profile
                       </MenuItem>
+                      <MenuItem
+                        as={NextLink}
+                        href={`/profile/${data.username}/documents`}
+                      >
+                        Documents
+                      </MenuItem>
                       <MenuDivider />
                       <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </MenuList>
