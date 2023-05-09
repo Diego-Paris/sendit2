@@ -22,29 +22,43 @@ import { getServerSession } from 'next-auth/next';
 import NextAuth from '../pages/api/auth/[...nextauth]';
 import { getServerSideProps } from '../pages/signin';
 import { FcGoogle } from 'react-icons/fc';
+import PageWrapper from './PageWrapper';
+import CardBox from './CardBox';
 
 export default function SignInCard({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
+    // <Flex
+    //   minH={'100vh'}
+    //   align={'center'}
+    //   justify={'center'}
+    //   bg={useColorModeValue('gray.50', 'gray.800')}
+    // >
+      <Flex
+      bg="gray.100"
+      align="center"
+      py={{ base: 6 }}
+      flexDirection="column"
+      gap="6"
+      h="auto"
+      minH={`calc(100vh - 73px)`}
+      flexGrow={1}
+      justify='center'
     >
+      <CardBox styles={{ boxShadow: 'lg' }}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'}>Sign in to your account</Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool <Link color={'blue.400'}>features</Link> ✌️
+            and start posting! ✌️
           </Text>
         </Stack>
         <Box
-          rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
-          boxShadow={'lg'}
-          p={8}
+          // rounded={'lg'}
+          // bg={useColorModeValue('gray.100', 'gray.700')}
+          // boxShadow={'lg'}
+          // p={8}
         >
           <Stack spacing={4}>
             {providers &&
@@ -57,6 +71,7 @@ export default function SignInCard({
                     <Button
                       w={'full'}
                       variant={'outline'}
+                      colorScheme='teal'
                       leftIcon={<FcGoogle />}
                       onClick={() => signIn(provider.id)}
                     >
@@ -95,6 +110,9 @@ export default function SignInCard({
           </Stack>
         </Box>
       </Stack>
+
+    {/* </Flex> */}
+    </CardBox>
     </Flex>
   );
 }
